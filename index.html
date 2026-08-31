@@ -966,6 +966,10 @@ const confirmPassword = formRows[7].value;
 if(!role) return alert('Please select a role.');
 if(password !== confirmPassword) return alert('Passwords do not match.');
 
+const submitBtn = e.target.querySelector('.btn-submit');
+submitBtn.disabled = true;
+submitBtn.innerHTML = '<i class="ph-fill ph-spinner"></i> Registering...';
+
 fetch('https://smart-healthcare-0y1b.onrender.com/api/register', {
     method: 'POST',
     headers: { 'Content-Type': 'application/json' },
@@ -973,6 +977,8 @@ fetch('https://smart-healthcare-0y1b.onrender.com/api/register', {
 })
 .then(res => res.json())
 .then(data => {
+    submitBtn.disabled = false;
+    submitBtn.innerHTML = '<i class="ph-fill ph-user-plus"></i> Create Account';
     if (data.error) {
         showNotification('Registration Error', data.error, 'error');
     } else {
@@ -982,6 +988,8 @@ fetch('https://smart-healthcare-0y1b.onrender.com/api/register', {
     }
 })
 .catch(err => {
+    submitBtn.disabled = false;
+    submitBtn.innerHTML = '<i class="ph-fill ph-user-plus"></i> Create Account';
     console.error(err);
     showNotification('Error', 'Failed to connect to server', 'error');
 });
