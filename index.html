@@ -966,7 +966,7 @@ const confirmPassword = formRows[7].value;
 if(!role) return alert('Please select a role.');
 if(password !== confirmPassword) return alert('Passwords do not match.');
 
-fetch('http://localhost:3000/api/register', {
+fetch('https://smart-healthcare-d6la.onrender.com/api/register', {
     method: 'POST',
     headers: { 'Content-Type': 'application/json' },
     body: JSON.stringify({ firstName, lastName, role, email, userId, phone, password })
@@ -1031,7 +1031,7 @@ const submitBtn = e.target.querySelector('.btn-submit');
 submitBtn.disabled = true;
 submitBtn.innerHTML = '<i class="ph-fill ph-spinner"></i> Signing in...';
 
-fetch('http://localhost:3000/api/login', {
+fetch('https://smart-healthcare-d6la.onrender.com/api/login', {
     method: 'POST',
     headers: { 'Content-Type': 'application/json' },
     body: JSON.stringify({ loginId, password, role })
