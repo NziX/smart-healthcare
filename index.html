@@ -953,47 +953,11 @@ document.getElementById('auth-register').classList.add('active');
 }
 function executeRegister(e) {
 e.preventDefault();
-const formRows = e.target.querySelectorAll('.input-element');
-const firstName = formRows[0].value;
-const lastName = formRows[1].value;
 const role = document.getElementById('reg-role').value;
-const email = formRows[3].value;
-const userId = formRows[4].value;
-const phone = formRows[5].value;
-const password = formRows[6].value;
-const confirmPassword = formRows[7].value;
-
 if(!role) return alert('Please select a role.');
-if(password !== confirmPassword) return alert('Passwords do not match.');
-
-const submitBtn = e.target.querySelector('.btn-submit');
-submitBtn.disabled = true;
-submitBtn.innerHTML = '<i class="ph-fill ph-spinner"></i> Registering...';
-
-fetch('https://smart-healthcare-0y1b.onrender.com/api/register', {
-    method: 'POST',
-    headers: { 'Content-Type': 'application/json' },
-    body: JSON.stringify({ firstName, lastName, role, email, userId, phone, password })
-})
-.then(res => res.json())
-.then(data => {
-    submitBtn.disabled = false;
-    submitBtn.innerHTML = '<i class="ph-fill ph-user-plus"></i> Create Account';
-    if (data.error) {
-        showNotification('Registration Error', data.error, 'error');
-    } else {
-        showNotification('Registration', '✅ Registration successful! Please login.', 'success');
-        switchAuthTab('login');
-        document.getElementById('user-role').value = role;
-    }
-})
-.catch(err => {
-    submitBtn.disabled = false;
-    submitBtn.innerHTML = '<i class="ph-fill ph-user-plus"></i> Create Account';
-    console.error(err);
-    showNotification('Error', 'Failed to connect to server', 'error');
-});
-
+showNotification('Registration', '✅ Registration successful! Please login.', 'success');
+switchAuthTab('login');
+document.getElementById('user-role').value = role;
 return false;
 }
 const roleMenus = {
@@ -1031,43 +995,15 @@ function executeLogin(e) {
 e.preventDefault();
 const role = document.getElementById('user-role').value;
 const roleName = document.getElementById('user-role').options[document.getElementById('user-role').selectedIndex].text;
-const loginId = e.target.querySelectorAll('.input-element')[1].value;
-const password = e.target.querySelectorAll('.input-element')[2].value;
 if(!role) return alert('Please select a role.');
-
-const submitBtn = e.target.querySelector('.btn-submit');
-submitBtn.disabled = true;
-submitBtn.innerHTML = '<i class="ph-fill ph-spinner"></i> Signing in...';
-
-fetch('https://smart-healthcare-0y1b.onrender.com/api/login', {
-    method: 'POST',
-    headers: { 'Content-Type': 'application/json' },
-    body: JSON.stringify({ loginId, password, role })
-})
-.then(res => res.json())
-.then(data => {
-    submitBtn.disabled = false;
-    submitBtn.innerHTML = '<i class="ph-fill ph-shield-check"></i> Sign In';
-    if (data.error) {
-        showNotification('Login Failed', data.error, 'error');
-    } else {
-        const user = data.user;
-        document.getElementById('auth-gateway').classList.add('hidden');
-        document.getElementById('app-ecosystem').style.display = 'flex';
-        document.getElementById('display-role').innerHTML = `<i class="ph-fill ph-shield-check"></i> ${roleName}`;
-        document.getElementById('dynamic-nav').innerHTML = roleMenus[user.role];
-        if(user.role === 'doctor') switchView('view-doctor-workspace', document.querySelector('.nav-link'));
-        else if(user.role === 'patient') switchView('view-patient-dashboard', document.querySelector('.nav-link'));
-        else switchView('view-dashboard', document.querySelector('.nav-link'));
-        showNotification('Welcome', `Welcome back, ${user.firstName} ${user.lastName}!`, 'success');
-    }
-})
-.catch(err => {
-    submitBtn.disabled = false;
-    submitBtn.innerHTML = '<i class="ph-fill ph-shield-check"></i> Sign In';
-    console.error(err);
-    showNotification('Error', 'Failed to connect to server. Is the backend running?', 'error');
-});
+document.getElementById('auth-gateway').classList.add('hidden');
+document.getElementById('app-ecosystem').style.display = 'flex';
+document.getElementById('display-role').innerHTML = `<i class="ph-fill ph-shield-check"></i> ${roleName}`;
+document.getElementById('dynamic-nav').innerHTML = roleMenus[role];
+if(role === 'doctor') switchView('view-doctor-workspace', document.querySelector('.nav-link'));
+else if(role === 'patient') switchView('view-patient-dashboard', document.querySelector('.nav-link'));
+else switchView('view-dashboard', document.querySelector('.nav-link'));
+showNotification('Welcome', `Welcome back, ${roleName}!`, 'success');
 }
 function switchView(viewId, element) {
 if(element) { document.querySelectorAll('.nav-link').forEach(l => l.classList.remove('active')); element.classList.add('active'); }
