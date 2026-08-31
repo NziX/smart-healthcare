@@ -1468,9 +1468,14 @@ document.addEventListener('DOMContentLoaded', function() {
 updateTranslation();
 console.log('🚀 Nexus AI Healthcare System v3.0 Loaded');
 // Auto-initialize as Admin since login is removed
-document.getElementById('display-role').innerHTML = `<i class="ph-fill ph-shield-check"></i> Admin`;
-document.getElementById('dynamic-nav').innerHTML = roleMenus['admin'];
-switchView('view-dashboard', document.querySelector('.nav-link'));
+document.getElementById('display-role').innerHTML = '<i class="ph-fill ph-shield-check"></i> Admin';
+const navEl = document.getElementById('dynamic-nav');
+navEl.innerHTML = roleMenus['admin'];
+const firstLink = navEl.querySelector('.nav-link');
+if(firstLink) firstLink.classList.add('active');
+document.querySelectorAll('.page-view').forEach(v => v.classList.remove('active'));
+const dashboard = document.getElementById('view-dashboard');
+if(dashboard) dashboard.classList.add('active');
 showNotification('Welcome', 'Welcome to Nexus AI Healthcare!', 'success');
 });
 </script>
